@@ -12,6 +12,7 @@ import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaInputDTO;
 import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaOutputDTO;
 import gestaoAPI.gestaoAPI.repository.CategoriaRepository;
 import gestaoAPI.gestaoAPI.repository.LojaRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class CategoriaService {
@@ -22,7 +23,7 @@ public class CategoriaService {
     @Autowired
     private LojaRepository lojaRepository;
 
-    public List<CategoriaOutputDTO> ver() {
+    public List<CategoriaOutputDTO> ver(HttpServletRequest request) {
         var categorias = repository.findAll();
         return categorias.stream().map(CategoriaOutputDTO::new).collect(Collectors.toList());
     }

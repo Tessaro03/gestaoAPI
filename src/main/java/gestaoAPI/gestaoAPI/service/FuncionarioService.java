@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import gestaoAPI.gestaoAPI.domain.Funcionario;
 import gestaoAPI.gestaoAPI.dtos.funcionario.FuncionarioInputDTO;
 import gestaoAPI.gestaoAPI.dtos.funcionario.FuncionarioOutputDTO;
+import gestaoAPI.gestaoAPI.infra.token.UsuarioToken;
 import gestaoAPI.gestaoAPI.repository.FuncionariosRepository;
 import gestaoAPI.gestaoAPI.repository.LojaRepository;
 import gestaoAPI.gestaoAPI.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Service
@@ -26,18 +28,26 @@ public class FuncionarioService {
     @Autowired
     private LojaRepository lojaRepository;
 
+    @Autowired
+    private UsuarioToken usuarioToken;
 
-    public List<FuncionarioOutputDTO> ver() {
-        var funcionarios = repository.findAll();
+
+    public List<FuncionarioOutputDTO> ver(HttpServletRequest request) {
+        var usuario = usuarioToken.usuarioToken(request);
+        var funcionario = repository.buscarFuncionarioPorIdUsuario(usuario.getId());
+        var funcionarios = repository.buscarFuncionariosPorIdLoja(funcionario.getLoja().getId());
         return funcionarios.stream().map(FuncionarioOutputDTO::new).collect(Collectors.toList());
     }
 
-    public void criar(@Valid FuncionarioInputDTO dados) {
-        var usuario = usuarioRepository.getReferenceById(dados.idUsuario());
-        var loja = lojaRepository.getReferenceById(2l);
+    public void criar(@Valid FuncionarioInputDTO dados, HttpServletRequest request) {
+        var usuarioLogado = usuarioToken.usuarioToken(request);
+        var funcionarioLogado = repository.buscarFuncionarioPorIdUsuario(usuarioLogado.getId());
 
-        var funcionario = new Funcionario(dados, usuario, loja);
-        repository.save(funcionario);
+        var contratado = usuarioRepository.getReferenceById(dados.idUsuario());
+        var loja = lojaRepository.getReferenceById(funcionarioLogado.getLoja().getId());
+
+        var funcionarioNovo = new Funcionario(dados, contratado, loja);
+        repository.save(funcionarioNovo);
     }
     
 }

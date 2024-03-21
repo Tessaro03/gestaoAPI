@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gestaoAPI.gestaoAPI.dtos.funcionario.FuncionarioInputDTO;
 import gestaoAPI.gestaoAPI.service.FuncionarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -21,13 +22,13 @@ public class FuncionariosController {
 
 
     @GetMapping
-    public ResponseEntity ver(){
-        var funcionarios = service.ver();
+    public ResponseEntity ver(HttpServletRequest request){
+        var funcionarios = service.ver(request);
         return ResponseEntity.ok().body(funcionarios);
     }
 
     @PostMapping
-    public void criar(@RequestBody @Valid FuncionarioInputDTO dados){
-        service.criar(dados);
+    public void criar(HttpServletRequest request, @RequestBody @Valid FuncionarioInputDTO dados){
+        service.criar(dados, request);
     }
 }

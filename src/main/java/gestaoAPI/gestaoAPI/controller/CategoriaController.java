@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaAlterarDTO;
 import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaInputDTO;
 import gestaoAPI.gestaoAPI.service.CategoriaService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -25,13 +26,13 @@ public class CategoriaController {
 
 
     @GetMapping
-    public ResponseEntity ver(){
-        var categorias = service.ver();
+    public ResponseEntity ver(HttpServletRequest request){
+        var categorias = service.ver(request);
         return ResponseEntity.ok().body(categorias);
     }
 
     @PostMapping
-    public void criar(@RequestBody @Valid CategoriaInputDTO dados){
+    public void criar(HttpServletRequest request, @RequestBody @Valid CategoriaInputDTO dados){
         service.criar(dados);
     }
 
