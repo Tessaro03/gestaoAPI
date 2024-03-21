@@ -33,15 +33,13 @@ public class FuncionarioService {
 
 
     public List<FuncionarioOutputDTO> ver(HttpServletRequest request) {
-        var usuario = usuarioToken.usuarioToken(request);
-        var funcionario = repository.buscarFuncionarioPorIdUsuario(usuario.getId());
+        var funcionario = usuarioToken.funcionarioToken(request);
         var funcionarios = repository.buscarFuncionariosPorIdLoja(funcionario.getLoja().getId());
         return funcionarios.stream().map(FuncionarioOutputDTO::new).collect(Collectors.toList());
     }
 
     public void criar(@Valid FuncionarioInputDTO dados, HttpServletRequest request) {
-        var usuarioLogado = usuarioToken.usuarioToken(request);
-        var funcionarioLogado = repository.buscarFuncionarioPorIdUsuario(usuarioLogado.getId());
+        var funcionarioLogado = usuarioToken.funcionarioToken(request);
 
         var contratado = usuarioRepository.getReferenceById(dados.idUsuario());
         var loja = lojaRepository.getReferenceById(funcionarioLogado.getLoja().getId());

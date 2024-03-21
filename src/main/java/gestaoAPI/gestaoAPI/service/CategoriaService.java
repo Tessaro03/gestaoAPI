@@ -10,6 +10,7 @@ import gestaoAPI.gestaoAPI.domain.Categoria;
 import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaAlterarDTO;
 import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaInputDTO;
 import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaOutputDTO;
+import gestaoAPI.gestaoAPI.infra.token.UsuarioToken;
 import gestaoAPI.gestaoAPI.repository.CategoriaRepository;
 import gestaoAPI.gestaoAPI.repository.LojaRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,24 +24,29 @@ public class CategoriaService {
     @Autowired
     private LojaRepository lojaRepository;
 
+    @Autowired
+    private UsuarioToken usuarioToken;
+
     public List<CategoriaOutputDTO> ver(HttpServletRequest request) {
-        var categorias = repository.findAll();
+        var funcionario = usuarioToken.funcionarioToken(request);
+        var categorias = repository.buscarCategoriaPorIdLoja(funcionario.getLoja().getId());
         return categorias.stream().map(CategoriaOutputDTO::new).collect(Collectors.toList());
     }
 
-    public void criar(CategoriaInputDTO dados) {
-        var loja = lojaRepository.getReferenceById(2l);
+    public void criar(CategoriaInputDTO dados, HttpServletRequest request) {
+        var funcionario = usuarioToken.funcionarioToken(request);
+        var loja = lojaRepository.getReferenceById(funcionario.getLoja().getId());
         var categoria = new Categoria(dados, loja);
         repository.save(categoria);
     }
 
-    public void alterar(Long id, CategoriaAlterarDTO dados) {
+    public void alterar(Long id, CategoriaAlterarDTO dados, HttpServletRequest request) {
         var categoria = repository.getReferenceById(id);
         categoria.alterar(dados);
         repository.save(categoria);
     }
 
-    public void deletar(Long id) {
+    public void deletar(HttpServletRequest request,Long id) {
         repository.deleteById(id);
     }
     

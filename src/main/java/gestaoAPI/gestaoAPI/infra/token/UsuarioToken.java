@@ -3,6 +3,7 @@ package gestaoAPI.gestaoAPI.infra.token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gestaoAPI.gestaoAPI.domain.Funcionario;
 import gestaoAPI.gestaoAPI.domain.Loja;
 import gestaoAPI.gestaoAPI.domain.Usuario;
 import gestaoAPI.gestaoAPI.infra.security.SecurityFilter;
@@ -23,14 +24,18 @@ public class UsuarioToken {
     @Autowired
     private UsuarioRepository repository;
 
-    
+    @Autowired
+    private FuncionariosRepository funcionariosRepository;
 
     public Usuario usuarioToken(HttpServletRequest request){
         var recuperarToken = securityFilter.recuperarToken(request);
         var login = tokenService.getSubject(recuperarToken);
-        var usuario = repository.buscarUsuarioPorLogin(login);
-        return usuario;
+        return repository.buscarUsuarioPorLogin(login);
     }
 
+    public Funcionario funcionarioToken(HttpServletRequest request){
+        var usuario = usuarioToken(request);
+        return funcionariosRepository.buscarFuncionarioPorIdUsuario(usuario.getId());
+    }
 
 }

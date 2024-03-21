@@ -33,17 +33,17 @@ public class CategoriaController {
 
     @PostMapping
     public void criar(HttpServletRequest request, @RequestBody @Valid CategoriaInputDTO dados){
-        service.criar(dados);
+        service.criar(dados, request);
     }
 
     @PatchMapping("/{id}")
-    public void alterar(@PathVariable Long id,@RequestBody @Valid CategoriaAlterarDTO dados){
-        service.alterar(id, dados);
+    public void alterar(@PathVariable Long id,@RequestBody @Valid CategoriaAlterarDTO dados, HttpServletRequest request){
+        service.alterar(id, dados, request);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id){
-        service.deletar(id);
+    public void deletar(HttpServletRequest request, @PathVariable Long id){
+        service.deletar(request, id);
     }
 
 }

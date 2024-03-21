@@ -31,6 +31,7 @@ public class Categoria {
     public Categoria(CategoriaInputDTO dados, Loja loja) {
         this.titulo = dados.titulo();
         this.descricao = dados.descricao();
+        this.loja = loja;
     }
 
     @Id
