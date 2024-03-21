@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gestaoAPI.gestaoAPI.dtos.produto.ProdutoAlterarDTO;
 import gestaoAPI.gestaoAPI.dtos.produto.ProdutoInputDTO;
 import gestaoAPI.gestaoAPI.service.ProdutoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -22,26 +23,27 @@ public class ProdutoController {
     
     @Autowired
     private ProdutoService service;
+    
 
     @GetMapping
-    public ResponseEntity ver(){
-        var produtos = service.ver();
+    public ResponseEntity ver(HttpServletRequest request){
+        var produtos = service.ver(request);
         return ResponseEntity.ok().body(produtos);
     }
 
     @PostMapping
-    public void criar(@RequestBody @Valid ProdutoInputDTO dados){
-        service.criar(dados);
+    public void criar(@RequestBody @Valid ProdutoInputDTO dados, HttpServletRequest request){
+        service.criar(dados, request);
     }
 
     @PatchMapping("/{id}")
-    public void alterar(@PathVariable Long id, @RequestBody @Valid ProdutoAlterarDTO dados){
-        service.alterar(dados, id);
+    public void alterar(@PathVariable Long id, @RequestBody @Valid ProdutoAlterarDTO dados, HttpServletRequest request){
+        service.alterar(dados, id, request);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id){
-        service.deletar(id);
+    public void deletar(@PathVariable Long id, HttpServletRequest request){
+        service.deletar(id, request);
     }
 
 
