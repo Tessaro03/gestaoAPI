@@ -46,13 +46,14 @@ public class CategoriaService {
     }
 
     public void alterar(Long id, CategoriaAlterarDTO dados, HttpServletRequest request) {
-        validador.validarPatch(request, dados, id);
+        validador.validadorPatch(request, dados, id);
         var categoria = repository.getReferenceById(id);
         categoria.alterar(dados);
         repository.save(categoria);
     }
 
     public void deletar(HttpServletRequest request,Long id) {
+        validador.validadorDelete(request, id);
         repository.deleteById(id);
     }
     

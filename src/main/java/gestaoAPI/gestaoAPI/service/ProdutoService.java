@@ -14,6 +14,8 @@ import gestaoAPI.gestaoAPI.infra.token.UsuarioToken;
 import gestaoAPI.gestaoAPI.repository.CategoriaRepository;
 import gestaoAPI.gestaoAPI.repository.LojaRepository;
 import gestaoAPI.gestaoAPI.repository.ProdutoRepository;
+import gestaoAPI.gestaoAPI.validacao.produto.ValidacaoProduto;
+import gestaoAPI.gestaoAPI.validacao.produto.validacaoPost.ValidarProdutoPost;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
@@ -31,6 +33,9 @@ public class ProdutoService {
     @Autowired
     private UsuarioToken usuarioToken;
 
+    @Autowired
+    public ValidacaoProduto validador;
+
     public List<ProdutoOutputDTO> ver(HttpServletRequest request) {
         var funcionario = usuarioToken.funcionarioToken(request);
         var produtos = repository.buscarProdutosPorIdLoja(funcionario.getLoja().getId());
@@ -38,8 +43,9 @@ public class ProdutoService {
     }
 
     public void criar(@Valid ProdutoInputDTO dados, HttpServletRequest request) {
+        validador.validadorPost(dados, request);
         var funcionario = usuarioToken.funcionarioToken(request);
-        
+
         var loja = lojaRepository.getReferenceById(funcionario.getLoja().getId());
         var categoria = categoriaRepository.CategoriaPorNome(dados.categoria());
         var produto = new Produto(dados, categoria, loja);
@@ -47,6 +53,7 @@ public class ProdutoService {
     }
     
     public void alterar(@Valid ProdutoAlterarDTO dados, Long id, HttpServletRequest request){
+        validador.validadorPatch(dados,  id,  request);
         var produto = repository.getReferenceById(id);
         if (dados.categoria() != null) {
             var categoria = categoriaRepository.CategoriaPorNome(dados.categoria());
