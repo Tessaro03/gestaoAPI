@@ -15,5 +15,9 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
 
     @Query("SELECT c FROM Categoria c WHERE c.loja.id = :idLoja")
     List<Categoria> buscarCategoriaPorIdLoja(Long idLoja);
+
+   
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Categoria c WHERE c.titulo = :titulo AND c.loja.id = :id")
+    boolean existeCategoriaNaLoja(@NotBlank String titulo, Long id);
     
 }

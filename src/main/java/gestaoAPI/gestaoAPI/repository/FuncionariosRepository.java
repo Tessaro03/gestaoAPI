@@ -14,4 +14,7 @@ public interface FuncionariosRepository extends JpaRepository<Funcionario, Long>
     
     @Query("SELECT f From Funcionario f WHERE f.loja.id = :idLoja")
     List<Funcionario> buscarFuncionariosPorIdLoja(Long idLoja);
+
+    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM Funcionario f WHERE f.usuario.id = :idUsuario")
+    boolean existeFuncionarioIdUsuario(Long idUsuario);
 }

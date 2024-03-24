@@ -13,6 +13,7 @@ import gestaoAPI.gestaoAPI.dtos.categoria.CategoriaOutputDTO;
 import gestaoAPI.gestaoAPI.infra.token.UsuarioToken;
 import gestaoAPI.gestaoAPI.repository.CategoriaRepository;
 import gestaoAPI.gestaoAPI.repository.LojaRepository;
+import gestaoAPI.gestaoAPI.validacao.categoria.ValidacaoCategoria;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
@@ -27,6 +28,9 @@ public class CategoriaService {
     @Autowired
     private UsuarioToken usuarioToken;
 
+    @Autowired
+    private ValidacaoCategoria validador;
+
     public List<CategoriaOutputDTO> ver(HttpServletRequest request) {
         var funcionario = usuarioToken.funcionarioToken(request);
         var categorias = repository.buscarCategoriaPorIdLoja(funcionario.getLoja().getId());
@@ -34,6 +38,7 @@ public class CategoriaService {
     }
 
     public void criar(CategoriaInputDTO dados, HttpServletRequest request) {
+        validador.validadorPost(request, dados);
         var funcionario = usuarioToken.funcionarioToken(request);
         var loja = lojaRepository.getReferenceById(funcionario.getLoja().getId());
         var categoria = new Categoria(dados, loja);
