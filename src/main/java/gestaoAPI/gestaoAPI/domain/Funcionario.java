@@ -1,5 +1,6 @@
 package gestaoAPI.gestaoAPI.domain;
 
+import gestaoAPI.gestaoAPI.dtos.funcionario.FuncionarioAlterarDTO;
 import gestaoAPI.gestaoAPI.dtos.funcionario.FuncionarioInputDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,5 +41,9 @@ public class Funcionario {
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    public void alterar(@Valid FuncionarioAlterarDTO dados) {
+        this.cargo = dados.cargo();
+    }
 
 }

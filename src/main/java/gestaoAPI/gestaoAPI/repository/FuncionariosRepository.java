@@ -17,4 +17,7 @@ public interface FuncionariosRepository extends JpaRepository<Funcionario, Long>
 
     @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END FROM Funcionario f WHERE f.usuario.id = :idUsuario")
     boolean existeFuncionarioIdUsuario(Long idUsuario);
+
+    @Query("SELECT CASE WHEN COUNT(f) > 1 THEN true ELSE false END FROM Funcionario f WHERE f.id = :id")
+    boolean funcionarioUltimoGeral(Long id);
 }
