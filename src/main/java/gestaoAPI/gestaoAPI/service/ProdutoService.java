@@ -15,9 +15,7 @@ import gestaoAPI.gestaoAPI.repository.CategoriaRepository;
 import gestaoAPI.gestaoAPI.repository.LojaRepository;
 import gestaoAPI.gestaoAPI.repository.ProdutoRepository;
 import gestaoAPI.gestaoAPI.validacao.produto.ValidacaoProduto;
-import gestaoAPI.gestaoAPI.validacao.produto.validacaoPost.ValidarProdutoPost;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 
 @Service
 public class ProdutoService {
@@ -42,7 +40,7 @@ public class ProdutoService {
         return produtos.stream().map(ProdutoOutputDTO::new).collect(Collectors.toList());
     }
 
-    public void criar(@Valid ProdutoInputDTO dados, HttpServletRequest request) {
+    public void criar( ProdutoInputDTO dados, HttpServletRequest request) {
         validador.validadorPost(dados, request);
         var funcionario = usuarioToken.funcionarioToken(request);
 
@@ -52,7 +50,7 @@ public class ProdutoService {
         repository.save(produto);
     }
     
-    public void alterar(@Valid ProdutoAlterarDTO dados, Long id, HttpServletRequest request){
+    public void alterar( ProdutoAlterarDTO dados, Long id, HttpServletRequest request){
         validador.validadorPatch(dados,  id,  request);
         var produto = repository.getReferenceById(id);
         if (dados.categoria() != null) {
@@ -64,6 +62,7 @@ public class ProdutoService {
     }
 
     public void deletar(Long id, HttpServletRequest request){
+        validador.validadorDelete(id, request);
         repository.deleteById(id);
     }
 }

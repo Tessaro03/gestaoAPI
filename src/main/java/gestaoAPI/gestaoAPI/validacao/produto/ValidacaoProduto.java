@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import gestaoAPI.gestaoAPI.dtos.produto.ProdutoAlterarDTO;
 import gestaoAPI.gestaoAPI.dtos.produto.ProdutoInputDTO;
+import gestaoAPI.gestaoAPI.validacao.produto.validacaoDelete.ValidarProdutoDelete;
 import gestaoAPI.gestaoAPI.validacao.produto.validacaoPatch.ValidarProdutoPatch;
 import gestaoAPI.gestaoAPI.validacao.produto.validacaoPost.ValidarProdutoPost;
 import gestaoAPI.gestaoAPI.validacao.usuario.validacaoUsuario.ValidarUsuario;
@@ -24,6 +25,9 @@ public class ValidacaoProduto {
     @Autowired
     private List<ValidarProdutoPatch> validarPatch;
 
+    @Autowired
+    private List<ValidarProdutoDelete> validarDelete;
+
     public void validadorPost(ProdutoInputDTO dados, HttpServletRequest request){
         validarUsuario.forEach(v -> v.validar(request));
         validarPost.forEach(v -> v.validar(dados, request));
@@ -33,6 +37,10 @@ public class ValidacaoProduto {
     public void validadorPatch(ProdutoAlterarDTO dados, Long id, HttpServletRequest request){
         validarUsuario.forEach(v -> v.validar(request));
         validarPatch.forEach(v -> v.validar( dados,  id,  request));
+    }
 
-        }
+    public void validadorDelete(Long id, HttpServletRequest request){
+        validarUsuario.forEach(v -> v.validar(request));
+        validarDelete.forEach(v -> v.validar(request, id));
+    }
 }
