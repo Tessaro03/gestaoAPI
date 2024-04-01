@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import gestaoAPI.gestaoAPI.dtos.loja.LojaInputDTO;
-import gestaoAPI.gestaoAPI.dtos.loja.LojaOutputDTO;
 import gestaoAPI.gestaoAPI.service.LojaService;
 
 @RestController
@@ -24,25 +25,20 @@ public class LojaController {
     @Autowired
     private LojaService service;
 
-    @GetMapping
-    public ResponseEntity ver(){
-        List<LojaOutputDTO> lojas = service.ver();
-        return ResponseEntity.ok().body(lojas);
-    }
 
     @PostMapping
-    public void criar(@Valid @RequestBody LojaInputDTO dados){
-        service.criar(dados);
+    public void criar(@Valid @RequestBody LojaInputDTO dados, HttpServletRequest request){
+        service.criar(request, dados);
     }
 
     @PatchMapping("/{id}")
-    public void alterar(@PathVariable Long id,@Valid @RequestBody LojaInputDTO dados){
-        service.alterar(id, dados);
+    public void alterar(HttpServletRequest request, @PathVariable Long id,@Valid @RequestBody LojaInputDTO dados){
+        service.alterar(request,id, dados);
     }
 
     @DeleteMapping("/{id}")
-    private void deletar(@PathVariable Long id){
-        service.deletar(id);
+    private void deletar(HttpServletRequest request, @PathVariable Long id){
+        service.deletar(request, id);
     }
     
 }
